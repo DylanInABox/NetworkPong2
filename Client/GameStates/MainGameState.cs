@@ -103,6 +103,8 @@ namespace GameStates
                 ball.BounceHorizontal();
             }
 
+            theirPaddle.Position += yIncr * lastDirection;
+
             //Update ball (nb: DON'T replace this with MonoGame's Update; messes up the determinism of frames)
             ball.Tick();
 
@@ -153,9 +155,9 @@ namespace GameStates
                 UpdatePaddleMessage msg = JsonConvert.DeserializeObject<UpdatePaddleMessage>(returnData);
 
                 lastDirection = msg.direction;
-                lastCalculatedPosition = msg.position + yIncr * lastDirection * (msg.tickNumber - tickCounter);
+                theirPaddle.Position = msg.position + yIncr * lastDirection * (tickCounter - msg.tickNumber);
 
-                Debug.WriteLine(msg.tickNumber - previousTick);
+                Debug.WriteLine(tickCounter - msg.tickNumber);
                 //if(direction == 0)
                 // {
                 //theirPaddle.Position = msg.position;
