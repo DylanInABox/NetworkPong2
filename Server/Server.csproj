@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="Current">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <FileUpgradeFlags>40</FileUpgradeFlags>
+    <UpgradeBackupLocation>C:\Users\Alexander\Dropbox\actueel\INFRAstructure\Assignment 3 - Pong (WIO)\Assignment 3 - Pong\network-pong\Backup\Server\</UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Networking\Networking.csproj" />
+  </ItemGroup>
+</Project>

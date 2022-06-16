@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32106.194
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Networking", "Networking\Networking.csproj", "{846FB29C-C000-406D-9DC7-03F245E24AE3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server\Server.csproj", "{F772EB53-43B8-43CD-9AD4-79F7A518607D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "Client\Client.csproj", "{1CEE290D-FDA2-4F65-8040-A7F2AB6DB381}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{846FB29C-C000-406D-9DC7-03F245E24AE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{846FB29C-C000-406D-9DC7-03F245E24AE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{846FB29C-C000-406D-9DC7-03F245E24AE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{846FB29C-C000-406D-9DC7-03F245E24AE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F772EB53-43B8-43CD-9AD4-79F7A518607D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F772EB53-43B8-43CD-9AD4-79F7A518607D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F772EB53-43B8-43CD-9AD4-79F7A518607D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F772EB53-43B8-43CD-9AD4-79F7A518607D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CEE290D-FDA2-4F65-8040-A7F2AB6DB381}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CEE290D-FDA2-4F65-8040-A7F2AB6DB381}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CEE290D-FDA2-4F65-8040-A7F2AB6DB381}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CEE290D-FDA2-4F65-8040-A7F2AB6DB381}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2DE237EE-DC0C-4E94-96F2-D05D453A2059}
+	EndGlobalSection
+EndGlobal
