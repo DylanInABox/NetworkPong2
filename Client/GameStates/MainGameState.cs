@@ -20,7 +20,6 @@ namespace GameStates
 
         TextGameObject tickCounterText;
 
-        UpdatePaddleMessage message;
         BaseProject.Game1 main;
 
         int tickCounter = 0;
@@ -52,8 +51,6 @@ namespace GameStates
             tickCounterText.Text = "sds";
             tickCounterText.Position = new Vector2(350, 30);
             Add(tickCounterText);
-
-            message = new UpdatePaddleMessage();
         }
 
         public void StartGame(int id)
@@ -98,17 +95,37 @@ namespace GameStates
             }
 
             // a (crude and simple) collisionCheck for Paddles
-            if (ball.CollidesWith(leftPaddle) || ball.CollidesWith(rightPaddle))
+            if (ball.CollidesWith(myPaddle))
             {
                 ball.BounceHorizontal();
+                PaddleHitMessage message = new PaddleHitMessage()
+                {
+                    position = myPaddle.Position,
+                    ballDirection = new Vector2()
+                    {
+                        X = ball.vx,
+                        Y = ball.vy
+                    },
+                    ballPosition = new Vector2()
+                    {
+                        X = ball.x,
+                        Y = ball.y
+                    },
+                    tickNumber = tickCounter
+                };
+
+                main.SendObject(message);
             }
 
-            theirPaddle.Position += yIncr * lastDirection;
+            if (tickCounter - previousTick > 1)
+                //theirPaddle.Position += yIncr * lastDirection;
 
-            //Update ball (nb: DON'T replace this with MonoGame's Update; messes up the determinism of frames)
-            ball.Tick();
+                //Update ball (nb: DON'T replace this with MonoGame's Update; messes up the determinism of frames)
+                ball.Tick();
 
         }
+
+        Vector2 selfLastInputDirection;
 
         /// <summary>
         /// Use HandleInput for all the code when 'pressing keyboard buttons'
@@ -116,27 +133,49 @@ namespace GameStates
         public override void HandleInput(InputHelper inputHelper)
         {
             base.HandleInput(inputHelper);
+            MessagePacket message = new MessagePacket();
+            Vector2 playerDirection;
 
             if (inputHelper.IsKeyDown(Keys.W))
             {
                 myPaddle.Position -= yIncr;
-                message.direction = -Vector2.UnitY;
+                playerDirection = -Vector2.UnitY;
             }
             else if (inputHelper.IsKeyDown(Keys.S))
             {
                 myPaddle.Position += yIncr;
-                message.direction = Vector2.UnitY;
+                playerDirection = Vector2.UnitY;
             }
             else
             {
                 myPaddle.Velocity = Vector2.Zero;
-                message.direction = Vector2.Zero;
+                playerDirection = Vector2.Zero;
             }
-            //now, send your message:
-            message.position = myPaddle.Position;
-            message.tickNumber = tickCounter;
-            main.SendObject(message);
-            //-------------
+
+            if (selfLastInputDirection == playerDirection)
+            {
+                message = new NoChangeMessage()
+                {
+                    direction = selfLastInputDirection,
+                    tickNumber = tickCounter
+                };
+                main.SendObject(message);
+
+            }
+            else
+            {
+                message = new UpdatePaddleMessage()
+                {
+                    position = myPaddle.Position,
+                    direction = playerDirection,
+                    tickNumber = tickCounter
+                };
+
+                selfLastInputDirection = playerDirection;
+                main.SendObject(message);
+
+            }
+            Debug.WriteLine(message.msgType);
         }
 
         int previousTick = 0;
@@ -149,6 +188,7 @@ namespace GameStates
         public void HandleMessage(byte[] receiveBytes)
         {
             string returnData = Encoding.UTF8.GetString(receiveBytes);
+
             //When Other paddle is moved
             if (returnData.Contains("UPDATE_POS"))
             {
@@ -157,11 +197,22 @@ namespace GameStates
                 lastDirection = msg.direction;
                 theirPaddle.Position = msg.position + yIncr * lastDirection * (tickCounter - msg.tickNumber);
 
-                Debug.WriteLine(tickCounter - msg.tickNumber);
-                //if(direction == 0)
-                // {
-                //theirPaddle.Position = msg.position;
-                // }
+                previousTick = msg.tickNumber;
+            }
+            else if (returnData.Contains("NO_CHANGE"))
+            {
+                NoChangeMessage msg = JsonConvert.DeserializeObject<NoChangeMessage>(returnData);
+                theirPaddle.Position += yIncr * msg.direction;
+                previousTick = msg.tickNumber;
+            }
+            else if (returnData.Contains("HIT"))
+            {
+                PaddleHitMessage msg = JsonConvert.DeserializeObject<PaddleHitMessage>(returnData);
+                theirPaddle.Position = msg.position;
+                ball.x = (int)(msg.ballPosition.X + msg.ballDirection.X * (tickCounter - msg.tickNumber));
+                ball.y = (int)(msg.ballPosition.Y + msg.ballDirection.Y * (tickCounter - msg.tickNumber));
+                ball.vx = (int)msg.ballDirection.X;
+                ball.vy = (int)msg.ballDirection.Y;
                 previousTick = msg.tickNumber;
             }
         }
